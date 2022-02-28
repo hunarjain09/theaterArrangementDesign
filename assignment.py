@@ -97,22 +97,21 @@ class Reservation:
         return ','.join(bookingDetails)
 
     def getAssignment(self,reservationNumber,seatsToBeReserved,separateRowAssignment=False):
-
-        bookingDetails = 'Not enough seats to accommodate!'
-
-        allAccommodatedTogether = False
-        
-        ## TODO: TreeMap can be used, sortedContainers in python for log(n) --> lookup.
-        for i in range(self.rows-1,-1,-1):
-            if self.rowAvailability[i]['availableSeats'] >= seatsToBeReserved:
-                bookingDetails = self.bookSeats(i,reservationNumber,seatsToBeReserved)
-                allAccommodatedTogether = True
-                break
-
-        ## Accommodating greedily by allocating as my possible in a given row.
         try:
             if seatsToBeReserved > self.totalAvailableSeats:
                 raise ReservationException("Unavailable Seat Count",{"Reservation Number":reservationNumber,"SeatsToBeReserved":seatsToBeReserved})
+
+            bookingDetails = 'Not enough seats to accommodate!'
+            allAccommodatedTogether = False
+            
+        ## TODO: TreeMap can be used, sortedContainers in python for log(n) --> lookup.
+            for i in range(self.rows-1,-1,-1):
+                if self.rowAvailability[i]['availableSeats'] >= seatsToBeReserved:
+                    bookingDetails = self.bookSeats(i,reservationNumber,seatsToBeReserved)
+                    allAccommodatedTogether = True
+                    break
+
+        ## Accommodating greedily by allocating as my possible in a given row.
             if separateRowAssignment and not allAccommodatedTogether:
                 row = self.rows - 1
                 bookingDetails = ''
@@ -124,6 +123,10 @@ class Reservation:
                         seatsToBeReserved -= seatsInRow
                     row -= 1
                 bookingDetails.strip()
+            
+            elif not allAccommodatedTogether:
+                logging.info(f'Cannot Accomodate Together in {seatsToBeReserved} seats in a single row for Reservation Number: {reservationNumber}')
+
         except ReservationException as e:
             logging.exception("Exception Ocurred")
             return reservationNumber+' '+bookingDetails
