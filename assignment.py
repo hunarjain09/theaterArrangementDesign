@@ -1,7 +1,15 @@
 import collections
 from enum import Enum
 import os
+import logging
 
+class ReservationException(Exception):
+    def __init__(self, reason, details, stdout=None, stderr=None, retcode=None):
+        self.reason = reason
+        self.details = details
+        self.stdout = stdout
+        self.stderr = stderr
+        self.retcode = retcode
 
 class ReservationType(Enum):
     Empty = 1
@@ -42,6 +50,7 @@ class Reservation:
             self.rowAvailability[i]['availableSeats'] = self.cols
             self.rowAvailability[i]['startFromLeft'] = True if i%2 == 0 else False
             self.rowAvailability[i]['lastAvailableSeat'] = 0 if self.rowAvailability[i]['startFromLeft'] else self.cols-1
+        logging.info("Created Reservation Matrix")
         return
      
     def bookSeats(self,rowNum,reservationNumber,seatsToBeReserved):
@@ -82,6 +91,9 @@ class Reservation:
                 buffer -= 1
 
         self.rowAvailability[rowNum]['lastAvailableSeat'] = startIndex
+
+        logging.info("Booked Seats for Reservation Number: "+reservationNumber)
+
         return ','.join(bookingDetails)
 
     def getAssignment(self,reservationNumber,seatsToBeReserved,separateRowAssignment=False):
@@ -98,18 +110,23 @@ class Reservation:
                 break
 
         ## Accommodating greedily by allocating as my possible in a given row.
+        try:
+            if seatsToBeReserved > self.totalAvailableSeats:
+                raise ReservationException("Unavailable Seat Count",{"Reservation Number":reservationNumber,"SeatsToBeReserved":seatsToBeReserved})
+            if separateRowAssignment and not allAccommodatedTogether:
+                row = self.rows - 1
+                bookingDetails = ''
 
-        if separateRowAssignment and not allAccommodatedTogether and seatsToBeReserved <= self.totalAvailableSeats:
-            row = self.rows - 1
-            bookingDetails = ''
-
-            while seatsToBeReserved > 0:
-                if row > 0 and self.rowAvailability[row]['availableSeats'] > 0:
-                    seatsInRow = min(seatsToBeReserved, self.rowAvailability[row]['availableSeats'])
-                    bookingDetails += self.bookSeats(row, reservationNumber, seatsInRow) + " "
-                    seatsToBeReserved -= seatsInRow
-                row -= 1
-            bookingDetails.strip()
+                while seatsToBeReserved > 0:
+                    if row > 0 and self.rowAvailability[row]['availableSeats'] > 0:
+                        seatsInRow = min(seatsToBeReserved, self.rowAvailability[row]['availableSeats'])
+                        bookingDetails += self.bookSeats(row, reservationNumber, seatsInRow) + " "
+                        seatsToBeReserved -= seatsInRow
+                    row -= 1
+                bookingDetails.strip()
+        except ReservationException as e:
+            logging.exception("Exception Ocurred")
+            return reservationNumber+' '+bookingDetails
 
         return reservationNumber+' '+bookingDetails
 
@@ -118,7 +135,8 @@ class Reservation:
 
 #####################################################################################
 
-
+## Setting up the logger
+logging.basicConfig(filename='assignment.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s',level=logging.INFO)
 
 rows = 10
 seats = 20

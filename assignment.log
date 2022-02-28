@@ -1,0 +1,17 @@
+root - INFO - Created Reservation Matrix
+root - INFO - Booked Seats for Reservation Number: R001
+root - INFO - Booked Seats for Reservation Number: R002
+root - INFO - Booked Seats for Reservation Number: R003
+root - INFO - Booked Seats for Reservation Number: R004
+root - INFO - Booked Seats for Reservation Number: R005
+root - INFO - Booked Seats for Reservation Number: R006
+root - INFO - Booked Seats for Reservation Number: R007
+root - INFO - Booked Seats for Reservation Number: R008
+root - INFO - Booked Seats for Reservation Number: R009
+root - ERROR - Exception Ocurred
+Traceback (most recent call last):
+  File "/Users/hunarjain09/Desktop/Movie Theater Seating/assignment.py", line 115, in getAssignment
+    raise ReservationException("Unavailable Seat Count",{"Reservation Number":reservationNumber,"SeatsToBeReserved":seatsToBeReserved})
+ReservationException: ('Unavailable Seat Count', {'Reservation Number': 'R010', 'SeatsToBeReserved': 500})
+root - INFO - Booked Seats for Reservation Number: R011
+root - INFO - Booked Seats for Reservation Number: R012
