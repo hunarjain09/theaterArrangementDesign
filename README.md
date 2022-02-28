@@ -25,6 +25,5 @@
 
 ## Flow Diagram
 
-![Flow Diagram](./SeatBooking.svg)
 
 
