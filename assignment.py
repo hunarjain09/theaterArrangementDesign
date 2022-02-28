@@ -98,11 +98,13 @@ class Reservation:
 
     def getAssignment(self,reservationNumber,seatsToBeReserved,separateRowAssignment=False):
         try:
+            bookingDetails = 'Not enough seats to accommodate!'
+            allAccommodatedTogether = False
+            
             if seatsToBeReserved > self.totalAvailableSeats:
                 raise ReservationException("Unavailable Seat Count",{"Reservation Number":reservationNumber,"SeatsToBeReserved":seatsToBeReserved})
 
-            bookingDetails = 'Not enough seats to accommodate!'
-            allAccommodatedTogether = False
+            
             
         ## TODO: TreeMap can be used, sortedContainers in python for log(n) --> lookup.
             for i in range(self.rows-1,-1,-1):
