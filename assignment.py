@@ -39,7 +39,7 @@ class Reservation:
 
         ## Creating Matrix for Visualization
         self.createReservationMatrix()
-        
+
         return
 
     def createReservationMatrix(self):
@@ -142,29 +142,29 @@ class Reservation:
 #####################################################################################
 
 
+if __name__ == '__main__':
+    rows = 10
+    seats = 20
+    outputFile = open("arrangementFile.txt",'w')
 
-rows = 10
-seats = 20
-outputFile = open("arrangementFile.txt",'w')
+    reservation = Reservation(rows,seats)
 
-reservation = Reservation(rows,seats)
+    inputFileName = input("Please input the path of the file\n")
 
-inputFileName = input("Please input the path of the file\n")
+    with open(inputFileName,'r') as inputFile:
+        while True:
 
-with open(inputFileName,'r') as inputFile:
-    while True:
+            line  = inputFile.readline()
+            if not line:
+                break
 
-        line  = inputFile.readline()
-        if not line:
-            break
+            line = line.split(' ')
 
-        line = line.split(' ')
+            reservationNumber = line[0]
+            seatsToBeReserved = int(line[1])
 
-        reservationNumber = line[0]
-        seatsToBeReserved = int(line[1])
+            outputFile.write(reservation.getAssignment(reservationNumber,seatsToBeReserved)+'\n')
 
-        outputFile.write(reservation.getAssignment(reservationNumber,seatsToBeReserved)+'\n')
-
-print('Path of the output file:')
-print(os.path.realpath(outputFile.name))
+    print('Path of the output file:')
+    print(os.path.realpath(outputFile.name))
 
