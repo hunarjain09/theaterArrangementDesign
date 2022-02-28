@@ -25,5 +25,4 @@
 
 ## Flow Diagram
 
-
-
+![Flow Diagram](./seatingArrangement.svg)
