@@ -15,9 +15,8 @@
 
 
 ## Considerations
-1. If we skip rows then customer satifaction will be compromised. (Idea of filling even rows first and then the odd ones by halving the space).
-2. Approach using Priority Queues --> Problems of maintaining two of them.
-3. Filling from centers will cause more gaps that's why initialised from ends. 
+1. Thought of an approach of using Priority Queue but the complexity will be O(nlogn).
+2. Filling from centers will cause more gaps that's why initialised from ends. 
 
 ## Improvements
 1. Better Unit Testing
