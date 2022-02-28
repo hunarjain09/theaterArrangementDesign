@@ -20,6 +20,9 @@ class ReservationType(Enum):
 class Reservation:
 
     def __init__(self,rows,cols,safetyBuffer=3) -> None:
+        ## Setting up the logger
+        logging.basicConfig(filename='assignment.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s',level=logging.INFO)
+
         ## Initialising the Rows, Cols and Safety Buffer
         self.rows = rows
         self.cols = cols
@@ -36,7 +39,7 @@ class Reservation:
 
         ## Creating Matrix for Visualization
         self.createReservationMatrix()
- 
+        
         return
 
     def createReservationMatrix(self):
@@ -138,8 +141,7 @@ class Reservation:
 
 #####################################################################################
 
-## Setting up the logger
-logging.basicConfig(filename='assignment.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s',level=logging.INFO)
+
 
 rows = 10
 seats = 20
