@@ -17,6 +17,9 @@ class Reservation:
         self.cols = cols
         self.safteyBuffer = safetyBuffer ## Cannot exceed the cols.
 
+        ## Total Available Seats (To avoid sum from the map)
+        self.totalAvailableSeats = self.rows * self.cols 
+
         ## For Quick Access to Last Index
         self.rowAvailability = collections.defaultdict(dict)
 
@@ -81,17 +84,32 @@ class Reservation:
         self.rowAvailability[rowNum]['lastAvailableSeat'] = startIndex
         return ','.join(bookingDetails)
 
-    def getAssignment(self,reservationNumber,seatsToBeReserved):
+    def getAssignment(self,reservationNumber,seatsToBeReserved,separateRowAssignment=False):
 
         bookingDetails = 'Not enough seats to accommodate!'
 
+        allAccommodatedTogether = False
+        
         ## TODO: TreeMap can be used, sortedContainers in python for log(n) --> lookup.
         for i in range(self.rows-1,-1,-1):
             if self.rowAvailability[i]['availableSeats'] >= seatsToBeReserved:
                 bookingDetails = self.bookSeats(i,reservationNumber,seatsToBeReserved)
+                allAccommodatedTogether = True
                 break
 
-        ## TODO: Recursive calls can be done if seatsToBeReserved can be chunked.
+        ## Accommodating greedily by allocating as my possible in a given row.
+
+        if separateRowAssignment and not allAccommodatedTogether and seatsToBeReserved <= self.totalAvailableSeats:
+            row = self.rows - 1
+            bookingDetails = ''
+
+            while seatsToBeReserved > 0:
+                if row > 0 and self.rowAvailability[row]['availableSeats'] > 0:
+                    seatsInRow = min(seatsToBeReserved, self.rowAvailability[row]['availableSeats'])
+                    bookingDetails += self.bookSeats(row, reservationNumber, seatsInRow) + " "
+                    seatsToBeReserved -= seatsInRow
+                row -= 1
+            bookingDetails.strip()
 
         return reservationNumber+' '+bookingDetails
 
@@ -127,12 +145,3 @@ with open(inputFileName,'r') as inputFile:
 print('Path of the output file:')
 print(os.path.realpath(outputFile.name))
 
-
-
-##TODO: Error Handling to better handle edge cases.
-##TODO: If we skip rows then customer satifaction will be compromised. (Idea of filling even rows first and then the odd ones for each half). 
-##TODO: Approach using Priority Queues --> Problems of maintaining two of them.
-##TODO: Tree Map and Sorted Containers. 
-##TODO: Store them in a queue and process them together instead of multiple function calls if the data is not a streaming one. 
-##TODO: Filling from centers will cause more gaps that's why initialised from ends. 
-##TODO: Multiple IDs after sometime are allowed in the current implementation.
