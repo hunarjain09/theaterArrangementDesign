@@ -20,7 +20,11 @@
 3. Filling from centers will cause more gaps that's why initialised from ends. 
 
 ## Improvements
-1. Unit Testing
-2. Error Handling
+1. Better Unit Testing
+2. Better Error Handling
+
+## Flow Diagram
+
+![Flow Diagram](./SeatBooking.svg)
 
 
