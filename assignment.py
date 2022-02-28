@@ -70,12 +70,14 @@ class Reservation:
                 bookingDetails.append(rowName+str(startIndex+1))
                 self.reservationMatrix[rowNum][startIndex] = (ReservationType.Booked,reservationNumber)
                 self.rowAvailability[rowNum]['availableSeats'] -= 1
+                self.totalAvailableSeats -= 1
                 startIndex += 1
                 seatsToBeReserved -= 1
-                          
+            ## Safety Buffer      
             while startIndex < self.cols and buffer > 0:
                 self.reservationMatrix[rowNum][startIndex] = (ReservationType.SafetyBuffer,None)
                 self.rowAvailability[rowNum]['availableSeats'] -= 1
+                self.totalAvailableSeats -= 1
                 startIndex += 1
                 buffer -= 1
         else:
@@ -84,12 +86,14 @@ class Reservation:
                 bookingDetails.append(rowName+str(startIndex+1))
                 self.reservationMatrix[rowNum][startIndex] = (ReservationType.Booked,reservationNumber)
                 self.rowAvailability[rowNum]['availableSeats'] -= 1
+                self.totalAvailableSeats -= 1
                 startIndex -= 1
                 seatsToBeReserved -= 1
                 
             while startIndex >=0 and buffer > 0:
                 self.reservationMatrix[rowNum][startIndex] = (ReservationType.SafetyBuffer,None)
                 self.rowAvailability[rowNum]['availableSeats'] -= 1
+                self.totalAvailableSeats -= 1
                 startIndex -= 1
                 buffer -= 1
 
