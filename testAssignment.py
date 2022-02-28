@@ -11,6 +11,7 @@ TODO: Disable logging for test
 
 class TestReservation(ut.TestCase):
     def testBookSeats(self):
+        ## Data Preparation
         rows = 10
         seats = 20
         safetyBuffer = 3
